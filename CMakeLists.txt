@@ -9,7 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
     image_transport
     cv_bridge
 )
-
+find_package(cmake_modules REQUIRED)
 find_package(Qt4 REQUIRED COMPONENTS QtCore QtGui)
 include(${QT_USE_FILE})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})

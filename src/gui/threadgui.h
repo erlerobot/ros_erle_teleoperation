@@ -8,7 +8,7 @@
 
 #include "gui.h"
 
-#include "shared_memory.h"
+#include "../shared_memory.h"
 
 #define cycle_gui 50 //miliseconds
 

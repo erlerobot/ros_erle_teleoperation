@@ -15,7 +15,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-#include "shared_memory.h"
+#include "../shared_memory.h"
 
 #include "RC_Widget.h"
 

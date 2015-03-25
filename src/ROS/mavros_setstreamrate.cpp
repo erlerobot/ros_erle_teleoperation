@@ -39,25 +39,4 @@ MAVROS_setStreamRate::MAVROS_setStreamRate()
             ROS_ERROR("Failed GET PARAMETER");
         }
     }
-
-//    mavros::ParamSet paramset;
-//    paramset.request.param_id = "SYSID_MYGCS";
-//    paramset.request.integer = 255;
-//    paramset.request.real = 255;
-//    if(cl.call(paramset)){
-//        ROS_INFO("SYSIS_MYGCS: send ok");
-//    }else{
-//        ROS_INFO("Failed to call service SYSIS_MYGCS");
-//    }
-
-//    mavros::ParamSet paramset2;
-//    paramset2.request.param_id = "SYSID_MYGCS";
-//    paramset2.request.integer = 1;
-//    paramset2.request.real = 1;
-//    if(cl.call(paramset2)){
-//        ROS_INFO("SYSIS_MYGCS: send ok");
-//    }else{
-//        ROS_INFO("Failed to call service SYSIS_MYGCS");
-//    }
-
 }

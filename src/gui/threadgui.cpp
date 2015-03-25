@@ -1,9 +1,14 @@
 #include "threadgui.h"
 
-threadGUI::threadGUI(Shared_Memory *share_memory)
+threadGUI::threadGUI(Shared_Memory *share_memory, Thread_ROS *t_ros)
 {
-    gui = new GUI(share_memory);
+    gui = new GUI(share_memory, t_ros);
     gui->show();
+}
+
+threadGUI::~threadGUI()
+{
+    std::cout << "~threadGUI" << std::endl;
 }
 
 void threadGUI::run()
@@ -17,6 +22,10 @@ void threadGUI::run()
         totala = a.tv_sec * 1000000 + a.tv_usec;
 
         gui->updateThreadGUI();
+
+        if(gui->getEnd_thread()){
+            break;
+        }
 
         gettimeofday(&b, NULL);
         totalb = b.tv_sec * 1000000 + b.tv_usec;

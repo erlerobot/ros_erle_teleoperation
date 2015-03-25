@@ -3,6 +3,8 @@
 
 #include <ros/ros.h>
 #include <mavros/StreamRate.h>
+#include <mavros/ParamSet.h>
+#include <mavros/ParamGet.h>
 
 class MAVROS_setStreamRate
 {

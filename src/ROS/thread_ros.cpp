@@ -17,7 +17,7 @@ Thread_ROS::Thread_ROS(Shared_Memory* share_memory)
         rc_maxlimtis.push_back(RC_Param(std::string("_MAX"), i));
     }
     for(int i = 0; i < 4; i++){
-        std::cout << RC_Param("_MIN", i) << std::endl;
+//        std::cout << RC_Param("_MIN", i) << std::endl;
         rc_minlimtis.push_back(RC_Param(std::string("_MIN"), i));
     }
     share_memory->setRC_maxlimits(rc_maxlimtis);
@@ -25,6 +25,26 @@ Thread_ROS::Thread_ROS(Shared_Memory* share_memory)
 //    for(int i = 0; i < 4; i++){
 //        std::cout << RC_Param("_TRIM", i) << std::endl;
 //    }
+    stop = false;
+}
+
+Thread_ROS::~Thread_ROS()
+{
+    stop = true;
+    mavros::OverrideRCIn msg_override;
+
+    for(int i = 0; i < 8; i++){
+        msg_override.channels[i] = 0;
+    }
+    rc_override_pub.publish(msg_override);
+
+    cl_param.shutdown();
+    cl_mode.shutdown();
+    rc_override_pub.shutdown();
+
+    ros::shutdown();
+
+    std::cout << "~Thread_ROS" << std::endl;
 }
 
 int Thread_ROS::RC_Param(std::string s, int i)
@@ -41,7 +61,7 @@ int Thread_ROS::RC_Param(std::string s, int i)
         else
             return -1;
     }else{
-        ROS_ERROR("Failed arming or disarming");
+        ROS_ERROR("Failed RC_PARAM");
         return -1;
     }
 }
@@ -70,26 +90,32 @@ void Thread_ROS::run()
 
     int cycle_control = 20;
 
-    while(1){
+    while(!stop){
 
         gettimeofday(&a, NULL);
         totala = a.tv_sec * 1000000 + a.tv_usec;
 
-//        share_memory->update();
-
         updateMode();
 
         mavros::OverrideRCIn msg_override;
-        msg_override.channels[0] = share_memory->getRoll();
-        msg_override.channels[1] = share_memory->getPitch();
-        msg_override.channels[2] = share_memory->getThrottle();
-        msg_override.channels[3] = share_memory->getYaw();
-        msg_override.channels[4] = 1100;
-        msg_override.channels[5] = 1100;
-        msg_override.channels[6] = 1100;
-        msg_override.channels[7] = 1100;
-        rc_override_pub.publish(msg_override);
 
+        if(share_memory->getOverride()){
+            msg_override.channels[0] = share_memory->getRoll();
+            msg_override.channels[1] = share_memory->getPitch();
+            msg_override.channels[2] = share_memory->getThrottle();
+            msg_override.channels[3] = share_memory->getYaw();
+            msg_override.channels[4] = 1100;
+            msg_override.channels[5] = 1100;
+            msg_override.channels[6] = 1100;
+            msg_override.channels[7] = 1100;
+        }else{
+            for(int i = 0; i < 8; i++){
+                msg_override.channels[i] = 0;
+            }
+        }
+        if(!stop){
+            rc_override_pub.publish(msg_override);
+        }
         ros::spinOnce();
 
         gettimeofday(&b, NULL);

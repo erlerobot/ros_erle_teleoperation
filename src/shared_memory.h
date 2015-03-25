@@ -31,6 +31,9 @@ public:
     void setRC_maxlimits(std::vector<int>);
     void setRC_minlimits(std::vector<int>);
 
+    void setOverride(bool b);
+    bool getOverride();
+
     std::vector<int> getRC_maxlimits();
     std::vector<int> getRC_minlimits();
 private:
@@ -47,6 +50,8 @@ private:
     std::string mode;
     std::string modeChange;
     bool armed;
+
+    bool override;
 };
 
 #endif // SHARED_MEMORY_H

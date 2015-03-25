@@ -5,6 +5,23 @@ Shared_Memory::Shared_Memory()
     if (pthread_mutex_init(&mutex, NULL) != 0){
         std::cout << "mutex init failed" << std::endl;
     }
+    override = false;
+}
+
+void Shared_Memory::setOverride(bool b)
+{
+    pthread_mutex_lock( &mutex );
+    this->override =b;
+    pthread_mutex_unlock( &mutex );
+}
+
+bool Shared_Memory::getOverride()
+{
+    bool result;
+    pthread_mutex_lock( &mutex );
+    result = this->override;
+    pthread_mutex_unlock( &mutex );
+    return result;
 }
 
 std::string Shared_Memory::getModeChange()
@@ -21,7 +38,6 @@ void Shared_Memory::setModeChange(std::string s)
     pthread_mutex_lock( &mutex );
     this->modeChange = s;
     pthread_mutex_unlock( &mutex );
-
 }
 
 void Shared_Memory::setMode(std::string s)

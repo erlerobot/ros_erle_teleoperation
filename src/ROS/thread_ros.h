@@ -15,6 +15,8 @@ class Thread_ROS:public QThread
 {
 public:
     Thread_ROS(Shared_Memory *share_memory);
+    ~Thread_ROS();
+
 private:
     Shared_Memory* share_memory;
     ros::Publisher rc_override_pub;
@@ -23,6 +25,8 @@ private:
 
     int RC_Param(std::string s, int i);
     void updateMode();
+
+    bool stop;
 
 protected:
     void run();

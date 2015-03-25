@@ -10,14 +10,16 @@
 
 #include "../shared_memory.h"
 
+#include "../ROS/thread_ros.h"
+
 #define cycle_gui 50 //miliseconds
 
 class threadGUI:public QThread
 {
 public:
-    threadGUI(Shared_Memory* share_memory);
-
-private:
+    threadGUI(Shared_Memory* share_memory, Thread_ROS* t_ros);
+    ~threadGUI();
+//private:
     GUI* gui;
 
 protected:

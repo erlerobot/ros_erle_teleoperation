@@ -1,7 +1,8 @@
 #include "gui.h"
 
-GUI::GUI(Shared_Memory *share_memory)
+GUI::GUI(Shared_Memory *share_memory, Thread_ROS* t_ros)
 {
+    this->t_ros = t_ros;
     this->share_memory = share_memory;
 
     mainLayout = new QGridLayout();
@@ -17,6 +18,38 @@ GUI::GUI(Shared_Memory *share_memory)
     connect(this, SIGNAL(signal_updateGUI()), this, SLOT(on_updateGUI_recieved()));
 
     show();
+//    setAttribute(Qt::WA_DeleteOnClose);
+//    setAttribute(Qt::WA_QuitOnClose);
+    end_thread = false;
+
+    connect(this, SIGNAL(destroyed(QObject*)), this, SLOT(on_closed_event()));
+}
+
+void GUI::on_closed_event()
+{
+    std::cout << "on_closed_event" << std::endl;
+    end_thread = true;
+    delete t_ros;
+}
+
+GUI::~GUI()
+{
+    end_thread = true;
+    delete t_ros;
+    std::cout << "Destructor GUI" << std::endl;
+}
+
+bool GUI::getEnd_thread()
+{
+    return end_thread;
+}
+
+void GUI::keyPressEvent(QKeyEvent *e)
+{
+    if(e->key()==Qt::Key_O)
+        check_override->setChecked(!check_override->isChecked());
+    std::cout << "keyPressEvent" << std::endl;
+
 }
 
 void GUI::config_mode()
@@ -60,7 +93,7 @@ void GUI::config_RC()
     channel12 = new RC_Widget(false,
                               rc_maxlimits[0], rc_minlimits[0],
                               rc_maxlimits[1], rc_minlimits[1],
-                              1, 1);
+                              1, -1);
     channel34 = new RC_Widget(true,
                               rc_maxlimits[2], rc_minlimits[2],
                               rc_maxlimits[3], rc_minlimits[3],
@@ -71,8 +104,11 @@ void GUI::config_RC()
     label_yaw = new QLabel();
     label_throttle = new QLabel();
 
+    check_override = new QCheckBox("Override RC");
+
     QGridLayout* laychannel12 = new QGridLayout();
     QGridLayout* laychannel34 = new QGridLayout();
+    QGridLayout* layoverride = new QGridLayout();
 
     laychannel12->addWidget(label_throttle, 0, 0);
     laychannel12->addWidget(label_yaw, 0, 1);
@@ -80,12 +116,22 @@ void GUI::config_RC()
     laychannel34->addWidget(label_pitch, 0, 0);
     laychannel34->addWidget(label_roll, 0, 1);
 
+    layoverride->addWidget(check_override, 0, 0);
+
     layRC->addWidget(channel12, 0, 1);
     layRC->addLayout(laychannel12, 1, 0);
     layRC->addWidget(channel34, 0, 0);
     layRC->addLayout(laychannel34, 1, 1);
+    layRC->addLayout(layoverride, 2, 0);
+
+    connect(check_override, SIGNAL(stateChanged(int)), this, SLOT(on_check_override_changed()));
 
     mainLayout->addWidget(boxRC, 1, 0);
+}
+
+void GUI::on_check_override_changed()
+{
+    share_memory->setOverride(check_override->isChecked());
 }
 
 void GUI::updateThreadGUI()

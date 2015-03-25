@@ -16,6 +16,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "../shared_memory.h"
+#include "../ROS/thread_ros.h"
 
 #include "RC_Widget.h"
 
@@ -24,9 +25,10 @@ class GUI:public QWidget
     Q_OBJECT
 
 public:
-    GUI(Shared_Memory* share_memory);
+    GUI(Shared_Memory* share_memory, Thread_ROS* t_ros);
+    ~GUI();
     void updateThreadGUI();
-
+    bool getEnd_thread();
 
 private:
     Shared_Memory* share_memory;
@@ -46,6 +48,10 @@ private:
     QLabel* label_throttle;
     QLabel* label_yaw;
 
+    QCheckBox* check_override;
+
+    Thread_ROS* t_ros;
+    bool end_thread;
     ///
 signals:
     void signal_updateGUI();
@@ -53,6 +59,9 @@ signals:
 public slots:
     void on_updateGUI_recieved();
     void on_combo_mode_changed();
+    void on_check_override_changed();
+    void keyPressEvent(QKeyEvent *e);
+    void on_closed_event();
 };
 
 #endif // GUI_H

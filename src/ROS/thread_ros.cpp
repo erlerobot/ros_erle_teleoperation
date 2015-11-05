@@ -55,7 +55,7 @@ int Thread_ROS::RC_Param(std::string s, int i)
     std::string param = std::string("RC") + ss.str() + s;
     srv.request.param_id = param;
     if (cl_param.call(srv)) {
-        ROS_INFO("Send OK %d Value: %d", srv.response.success, srv.response.value.integer);
+        ROS_INFO("Send OK %d Value: %ld", srv.response.success, srv.response.value.integer);
         if (srv.response.success)
             return srv.response.value.integer;
         return -1;
@@ -63,7 +63,7 @@ int Thread_ROS::RC_Param(std::string s, int i)
 
     ROS_ERROR("Failed RC_PARAM");
     return -1;
-    }
+    
 }
 
 void Thread_ROS::updateMode()

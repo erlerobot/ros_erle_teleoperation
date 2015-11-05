@@ -22,7 +22,7 @@ MAVROS_setStreamRate::MAVROS_setStreamRate()
     ros::ServiceClient cl = n.serviceClient<mavros_msgs::ParamSet>("/mavros/param/set");
     for(;;) {
         if (cl_get.call(paramget)) {
-            ROS_INFO("Send OK %d Value: %d", paramget.response.success, paramget.response.value.integer);
+            ROS_INFO("Send OK %d Value: %ld", paramget.response.success, paramget.response.value.integer);
             if (paramget.response.value.integer == 1) {
                 break;
             } else {

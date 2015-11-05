@@ -2,7 +2,7 @@
 #define SUBSCRIBE_MAVROS_STATE_H
 
 #include <ros/ros.h>
-#include "mavros/State.h"
+#include "mavros_msgs/State.h"
 
 #include "../shared_memory.h"
 

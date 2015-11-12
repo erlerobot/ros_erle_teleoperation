@@ -5,7 +5,7 @@ Subscribe_mavros_state::Subscribe_mavros_state(Shared_Memory* shared_memory)
     this->shared_memory = shared_memory;
 }
 
-void Subscribe_mavros_state::mavrosStateCb(const mavros::StateConstPtr &msg)
+void Subscribe_mavros_state::mavrosStateCb(const mavros_msgs::StateConstPtr &msg)
 {
     if(msg->mode == std::string("CMODE(0)"))
         return;

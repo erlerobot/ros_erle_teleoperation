@@ -7,9 +7,9 @@
 
 #include <ros/ros.h>
 #include "../shared_memory.h"
-#include <mavros/OverrideRCIn.h>
-#include <mavros/ParamGet.h>
-#include <mavros/SetMode.h>
+#include "mavros_msgs/OverrideRCIn.h"
+#include "mavros_msgs/ParamGet.h"
+#include "mavros_msgs/SetMode.h"
 
 class Thread_ROS:public QThread
 {

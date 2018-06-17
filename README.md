@@ -9,5 +9,6 @@
 ## Try it out:
 
 ```bash
+source ~/ros_teleoperation_ws/install/setup.bash
 rosrun ros_erle_teleoperation ros_erle_teleoperation
 ```
